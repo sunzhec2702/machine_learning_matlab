@@ -49,13 +49,12 @@ pause;
 % Scale features and set them to zero mean
 fprintf('Normalizing Features ...\n');
 
-%[X mu sigma] = featureNormalize(X);
+[X mu sigma] = featureNormalize(X);
 
 % Add intercept term to X
 X = [ones(m, 1) X];
 
 
-real_xx = [2104 3];
 %% ================ Part 2: Gradient Descent ================
 
 % ====================== YOUR CODE HERE ======================
@@ -83,11 +82,11 @@ real_xx = [2104 3];
 fprintf('Running gradient descent ...\n');
 
 % Choose some alpha value
-alpha = 0.001;
-num_iters = 4000000;
+alpha = 0.01;
+num_iters = 400;
 
 % Init Theta and Run Gradient Descent 
-theta = [0;0;-0];
+theta = zeros(3, 1);
 [theta, J_history] = gradientDescentMulti(X, y, theta, alpha, num_iters);
 
 % Plot the convergence graph
@@ -106,11 +105,11 @@ fprintf('\n');
 % Recall that the first column of X is all-ones. Thus, it does
 % not need to be normalized.
 price = 0; % You should change this
-
-% [real_data_with_scale, mu_real, std_real] = featureNormalize(real_xx);
-real_data_with_scale = [1 real_data_with_scale];
-price = real_data_with_scale * theta;
-
+real_X = [1650 3];
+[real_X mu sigma] = featureNormalize(real_X);
+real_X = (real_X - mu)./sigma;
+real_X = [1 real_X];
+price = real_X * theta;
 % ============================================================
 
 fprintf(['Predicted price of a 1650 sq-ft, 3 br house ' ...
@@ -144,7 +143,7 @@ X = [ones(m, 1) X];
 
 % Calculate the parameters from the normal equation
 theta = normalEqn(X, y);
-JJ = computeCostMulti(X, y, theta);
+
 % Display normal equation's result
 fprintf('Theta computed from the normal equations: \n');
 fprintf(' %f \n', theta);
@@ -154,8 +153,8 @@ fprintf('\n');
 % Estimate the price of a 1650 sq-ft, 3 br house
 % ====================== YOUR CODE HERE ======================
 price = 0; % You should change this
-real_x = [1 real_xx];
-price = real_x * theta;
+real_x2 = [1 1650 3];
+price = real_x2 * theta;
 
 % ============================================================
 
