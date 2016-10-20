@@ -83,7 +83,7 @@ fprintf('Running gradient descent ...\n');
 
 % Choose some alpha value
 alpha = 0.01;
-num_iters = 400;
+num_iters = 4000;
 
 % Init Theta and Run Gradient Descent 
 theta = zeros(3, 1);
@@ -106,7 +106,6 @@ fprintf('\n');
 % not need to be normalized.
 price = 0; % You should change this
 real_X = [1650 3];
-[real_X mu sigma] = featureNormalize(real_X);
 real_X = (real_X - mu)./sigma;
 real_X = [1 real_X];
 price = real_X * theta;
