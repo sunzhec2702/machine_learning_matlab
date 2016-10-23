@@ -39,6 +39,21 @@ Theta2_grad = zeros(size(Theta2));
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
 %
+
+X = [ones(m,1) X];
+
+hiddenZ = Theta1 * X';
+hiddenA = sigmoid(hiddenZ)'; %mxn as X
+hiddenA = [ones(size(hiddenA,1),1) hiddenA];
+outputZ = Theta2 * hiddenA';
+outputA = sigmoid(outputZ)';
+%[~, outputA] = max(outputA, [], 1);
+
+unrolledY = ((repmat([1:num_labels],m,1) == repmat(y,1,num_labels)))';
+
+J = -1/m*sum((sum(unrolledY'.*log(outputA),2) + sum((1-unrolledY)'.*log(1-outputA),2)))...
+    + lambda/2/m*((sum(sum(Theta1(:,2:end).^2))) + (sum(sum(Theta2(:,2:end).^2))));
+
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
 %         the cost function with respect to Theta1 and Theta2 in Theta1_grad and
@@ -54,6 +69,16 @@ Theta2_grad = zeros(size(Theta2));
 %               over the training examples if you are implementing it for the 
 %               first time.
 %
+hidden_THETA = zeros(size(Theta1));
+output_THETA = zeros(size(Theta2));
+for (i = 1 : m)
+   output_ep = outputA(i,:) - unrolledY(:,i)';
+   hidden_ep = output_ep*Theta2.*(hiddenA(i,:).*(1-hiddenA(i,:)));
+   output_THETA = output_THETA + output_ep' * hiddenA(i,:);
+   hidden_THETA = hidden_THETA + hidden_ep(2:end)' * X(i,:);
+end
+Theta1_grad = 1/m*hidden_THETA;
+Theta2_grad = 1/m*output_THETA;
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
@@ -61,24 +86,8 @@ Theta2_grad = zeros(size(Theta2));
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Theta1_grad = Theta1_grad + 1/m*lambda.*[zeros(size(Theta1,1),1) Theta1(:,2:end)];
+Theta2_grad = Theta2_grad + 1/m*lambda.*[zeros(size(Theta2,1),1) Theta2(:,2:end)];
 
 % -------------------------------------------------------------
 
