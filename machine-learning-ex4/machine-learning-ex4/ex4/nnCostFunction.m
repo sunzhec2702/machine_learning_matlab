@@ -50,6 +50,8 @@ outputA = sigmoid(outputZ)';
 %[~, outputA] = max(outputA, [], 1);
 
 unrolledY = ((repmat([1:num_labels],m,1) == repmat(y,1,num_labels)))';
+%all_combos = eye(num_labels);
+%unrolledY = all_combos(y,:);
 
 J = -1/m*sum((sum(unrolledY'.*log(outputA),2) + sum((1-unrolledY)'.*log(1-outputA),2)))...
     + lambda/2/m*((sum(sum(Theta1(:,2:end).^2))) + (sum(sum(Theta2(:,2:end).^2))));
