@@ -21,6 +21,16 @@ m = size(X, 1);
 error_train = zeros(m, 1);
 error_val   = zeros(m, 1);
 
+for i = 1:m
+   theta = trainLinearReg(X(1:i,:), y(1:i), lambda);
+   %Note the lambda should be 0 for the error
+   Jtrain = linearRegCostFunction(X(1:i,:), y(1:i), theta, 0); 
+   Jval = linearRegCostFunction(Xval,yval, theta, 0);
+   error_train(i) = Jtrain;
+   error_val(i) = Jval;
+end
+
+
 % ====================== YOUR CODE HERE ======================
 % Instructions: Fill in this function to return training errors in 
 %               error_train and the cross validation errors in error_val. 
